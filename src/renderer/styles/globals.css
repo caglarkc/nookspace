@@ -1,0 +1,316 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Define CSS variables for theming */
+  :root {
+    /* Dark theme (default) */
+    --color-background: #0f0f0f;
+    --color-background-secondary: #1a1a1a;
+    --color-surface: #1e1e1e;
+    --color-surface-hover: #2a2a2a;
+    --color-surface-active: #303030;
+    --color-surface-muted: #171717;
+    --color-border: #2a2a2a;
+    --color-border-muted: #242424;
+    --color-accent: #f97316;
+    --color-accent-hover: #ea580c;
+    --color-accent-muted: rgba(249, 115, 22, 0.1);
+    --color-text-primary: #ececec;
+    --color-text-secondary: #a0a0a0;
+    --color-text-muted: #6b6b6b;
+  }
+
+  /* Light theme override */
+  .light {
+    --color-background: #f5f3ee;
+    --color-background-secondary: #faf9f6;
+    --color-surface: #ffffff;
+    --color-surface-hover: #faf9f6;
+    --color-surface-active: #f0eeea;
+    --color-surface-muted: #f7f6f3;
+    --color-border: #e5e3de;
+    --color-border-muted: #ebe9e4;
+    --color-accent: #f97316;
+    --color-accent-hover: #ea580c;
+    --color-accent-muted: #fff7ed;
+    --color-text-primary: #1a1a1a;
+    --color-text-secondary: #5c5c5c;
+    --color-text-muted: #8c8c8c;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* Custom scrollbar - subtle */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-text-muted;
+  }
+}
+
+@layer components {
+  /* Button styles */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-150;
+    @apply focus:outline-none focus:ring-2 focus:ring-accent focus:ring-opacity-30;
+  }
+
+  .btn-primary {
+    @apply bg-accent text-white hover:bg-accent-hover;
+    @apply shadow-soft;
+  }
+
+  .btn-secondary {
+    @apply bg-surface border border-border hover:bg-surface-hover text-text-primary;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent hover:bg-surface-active text-text-secondary hover:text-text-primary;
+  }
+
+  /* Input styles */
+  .input {
+    @apply w-full px-4 py-3 rounded-xl bg-surface border border-border;
+    @apply text-text-primary placeholder:text-text-muted;
+    @apply focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent focus:ring-opacity-10;
+    @apply transition-all duration-150;
+  }
+
+  /* Card styles */
+  .card {
+    @apply bg-surface rounded-3xl shadow-card;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .card-hover {
+    @apply hover:shadow-elevated cursor-pointer transition-all duration-150;
+    &:hover {
+      border-color: rgba(255, 255, 255, 0.12);
+    }
+  }
+
+  /* Tag/Chip styles - like the quick action buttons */
+  .tag {
+    @apply inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-surface border border-border;
+    @apply text-sm font-medium text-text-primary;
+    @apply hover:bg-surface-hover hover:shadow-soft cursor-pointer transition-all duration-150;
+  }
+
+  .tag-active {
+    @apply bg-accent-muted text-accent;
+    border-color: rgba(249, 115, 22, 0.3);
+  }
+
+  /* Badge styles */
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-idle {
+    @apply bg-surface-muted text-text-muted;
+  }
+
+  .badge-running {
+    @apply bg-accent-muted text-accent;
+  }
+
+  .badge-completed {
+    @apply bg-success/10 text-success;
+  }
+
+  .badge-error {
+    @apply bg-error/10 text-error;
+  }
+
+  /* Section header */
+  .section-header {
+    @apply flex items-center justify-between px-3 py-2 text-xs font-medium text-text-muted uppercase tracking-wider;
+  }
+
+  /* Progress circle */
+  .progress-circle {
+    @apply w-6 h-6 rounded-full border-2 flex items-center justify-center;
+  }
+
+  .progress-circle-pending {
+    @apply border-border bg-surface;
+  }
+
+  .progress-circle-active {
+    @apply border-accent bg-accent-muted;
+  }
+
+  .progress-circle-completed {
+    @apply border-success bg-success/10;
+  }
+}
+
+@layer utilities {
+  /* Window drag region for custom titlebar */
+  .titlebar-drag {
+    -webkit-app-region: drag;
+    app-region: drag;
+  }
+
+  .titlebar-no-drag {
+    -webkit-app-region: no-drag;
+    app-region: no-drag;
+  }
+
+  /* Grid background pattern - uses theme colors from tailwind.config.js */
+  .bg-grid {
+    @apply bg-background;
+    background-image: 
+      linear-gradient(to right, theme('colors.border.DEFAULT') 1px, transparent 1px),
+      linear-gradient(to bottom, theme('colors.border.DEFAULT') 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  /* Message bubbles */
+  .message-user {
+    @apply bg-surface rounded-2xl;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    width: fit-content;
+    margin-left: auto;
+  }
+
+  .message-assistant {
+    @apply bg-surface rounded-3xl;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* Prose styling for assistant messages - elegant serif font */
+  .prose-chat {
+    font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+    font-size: 1.0625rem;
+    line-height: 1.75;
+    letter-spacing: -0.01em;
+  }
+
+  .prose-chat p {
+    margin-bottom: 1rem;
+  }
+
+  .prose-chat p:last-child {
+    margin-bottom: 0;
+  }
+
+  .prose-chat strong {
+    font-weight: 600;
+  }
+
+  .prose-chat em {
+    font-style: italic;
+  }
+
+  .prose-chat ul, .prose-chat ol {
+    margin: 0.75rem 0;
+    padding-left: 1.5rem;
+  }
+
+  .prose-chat ul {
+    list-style: disc;
+    list-style-position: outside;
+  }
+
+  .prose-chat ol {
+    list-style: decimal;
+    list-style-position: outside;
+  }
+
+  .prose-chat li {
+    margin-bottom: 0.375rem;
+  }
+
+  .prose-chat h1, .prose-chat h2, .prose-chat h3, .prose-chat h4 {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .prose-chat h1 { font-size: 1.5rem; }
+  .prose-chat h2 { font-size: 1.25rem; }
+  .prose-chat h3 { font-size: 1.125rem; }
+  .prose-chat h4 { font-size: 1rem; }
+
+  .prose-chat .katex-display {
+    margin: 1rem 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  .prose-chat .katex {
+    font-size: 1em;
+  }
+
+  .prose-chat a {
+    color: theme('colors.accent.DEFAULT');
+    text-decoration-line: underline;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.22em;
+    text-decoration-color: currentColor;
+    text-decoration-skip-ink: none;
+  }
+
+  .prose-chat blockquote {
+    margin: 0.75rem 0;
+    padding-left: 1rem;
+    border-left: 2px solid rgba(124, 58, 237, 0.4);
+    color: theme('colors.text.muted');
+  }
+
+  .prose-chat .footnotes {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: theme('colors.text.muted');
+  }
+
+  .prose-chat .footnotes ol {
+    padding-left: 1.25rem;
+  }
+
+  .prose-chat .footnotes li {
+    margin-bottom: 0.5rem;
+  }
+
+  .prose-chat .footnotes p {
+    margin: 0.25rem 0 0;
+  }
+
+  /* Code block */
+  .code-block {
+    @apply bg-surface-muted rounded-2xl p-4 font-mono text-sm overflow-x-auto;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* Tool name wrapping - force break on any character */
+  .tool-name-wrap {
+    word-break: break-all;
+    overflow-wrap: anywhere;
+    hyphens: auto;
+  }
+}

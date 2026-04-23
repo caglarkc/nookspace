@@ -1,0 +1,127 @@
+appId: com.opencowork.app
+productName: NookSpace
+copyright: Copyright © 2026 Ali Çağlar Koçer
+
+directories:
+  output: release
+  buildResources: resources
+
+npmRebuild: true
+
+files:
+  - dist/**/*
+  - dist-electron/**/*
+  - dist-mcp/**/*
+  - package.json
+  - node_modules/@anthropic-ai/claude-code/**/*
+  - node_modules/@anthropic-ai/claude-agent-sdk/**/*
+  - node_modules/@img/**/*
+  - .claude/skills/**/*
+
+# WSL Agent resources (for Windows sandbox)
+# Lima Agent resources (for macOS sandbox)
+# MCP servers (compiled JavaScript files)
+extraResources:
+  - from: dist-wsl-agent
+    to: wsl-agent
+    filter:
+      - "**/*"
+  - from: dist-lima-agent
+    to: lima-agent
+    filter:
+      - "**/*"
+  - from: dist-mcp
+    to: mcp
+    filter:
+      - "**/*"
+
+# Unpack claude-code so it can be executed as a CLI
+# Also unpack skills so they can be read/written at runtime
+# Sharp native modules must also be unpacked for image processing
+# Note: MCP servers are now bundled with esbuild, so no need to unpack MCP SDK
+asarUnpack:
+  - node_modules/@anthropic-ai/claude-code/**/*
+  - node_modules/@anthropic-ai/claude-agent-sdk/**/*
+  - node_modules/@img/**/*
+  - node_modules/better-sqlite3/**/*
+  - .claude/skills/**/*
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: ${productName}-${version}-win-${arch}.${ext}
+  signAndEditExecutable: false
+  extraResources:
+    - from: resources/node/win32-x64
+      to: node
+      filter:
+        - "**/*"
+    - from: resources/node/win32-x64/node_modules
+      to: node/node_modules
+      filter:
+        - "**/*"
+
+mac:
+  target:
+    - target: dmg
+      arch:
+        - arm64
+        - x64
+  artifactName: ${productName}-${version}-mac-${arch}.${ext}
+  identity: null
+  hardenedRuntime: false
+  gatekeeperAssess: false
+  entitlements: resources/entitlements.mac.plist
+  entitlementsInherit: resources/entitlements.mac.plist
+  extraResources:
+    - from: resources/node/darwin-${arch}
+      to: node
+      filter:
+        - "**/*"
+    # Bundled Python runtime + site-packages for GUI automation helpers (Pillow, pyobjc/Quartz)
+    - from: resources/python/darwin-${arch}
+      to: python
+      filter:
+        - "**/*"
+    # Bundled GUI helper tools (e.g. cliclick) to avoid relying on user-installed Homebrew tools
+    - from: resources/tools/darwin-${arch}
+      to: tools
+      filter:
+        - "**/*"
+
+linux:
+  target:
+    - target: AppImage
+      arch:
+        - x64
+  artifactName: ${productName}-${version}-linux-${arch}.${ext}
+  extraResources:
+    - from: resources/node/linux-x64
+      to: node
+      filter:
+        - "**/*"
+
+nsis:
+  oneClick: false
+  perMachine: false
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: false
+
+dmg:
+  contents:
+    - x: 130
+      y: 220
+    - x: 410
+      y: 220
+      type: link
+      path: /Applications
+
+extraMetadata:
+  main: dist-electron/main/index.js
+
+publish:
+  provider: github
+  owner: caglarkc
+  repo: nookspace
